@@ -54,6 +54,7 @@ function Layout({ children }) {
 				<Link to="/dashboard">Dashboard</Link>
 				<Link to="/">Students</Link>
 				<Link to="/courses">Courses</Link>
+				
 				{user && <button onClick={logout}>Logout</button>}
 			</nav>
 			{children}
@@ -284,29 +285,61 @@ function StudentDetailPage() {
 }
 
 function CoursesPage() {
-	const { token } = useAuth();
-	const { data: courses, loading, error } = useFetch(`${API_BASE}/api/courses`, [], token);
+  const { token } = useAuth();
+  const { data: courses, loading, error, setData: setCourses } =
+    useFetch(`${API_BASE}/api/courses`, [], token);
 
-	if (loading) return <Layout>Loading...</Layout>;
-	if (error) return <Layout>Error loading courses</Layout>;
+  function onSubmit(e) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const code = form.get("code");
+    const name = form.get("name");
 
-	return (
-		<Layout>
-			<h2>Courses</h2>
+    if (!code || !name) return;
 
-			<ul className="list">
-				{courses?.map((c) => (
-					<li key={c.id} className="list-item">
-						<span className="flex-grow">
-							{c.code} — {c.name}
-						</span>
-					</li>
-				))}
-			</ul>
-		</Layout>
-	);
+    fetch(`${API_BASE}/api/courses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ code, name })
+    })
+      .then((r) => r.json())
+      .then((created) => {
+        setCourses((prev) =>
+          Array.isArray(prev) ? [created, ...prev] : [created]
+        );
+        e.currentTarget.reset();
+      });
+  }
+
+  if (loading) return <Layout>Loading...</Layout>;
+  if (error) return <Layout>Error loading courses</Layout>;
+
+  return (
+    <Layout>
+      <h2>Courses</h2>
+
+      {/* ✅ Add Course Form */}
+      <form onSubmit={onSubmit} className="form">
+        <input className="input" name="code" placeholder="Course Code" />
+        <input className="input" name="name" placeholder="Course Name" />
+        <button className="button" type="submit">Add Course</button>
+      </form>
+
+      <ul className="list">
+        {courses?.map((c) => (
+          <li key={c.id} className="list-item">
+            <span className="flex-grow">
+              {c.code} — {c.name}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Layout>
+  );
 }
-
 function DashboardPage() {
 	const { token } = useAuth();
 	const { data: students, loading: loadingStudents } = useFetch(`${API_BASE}/api/students`, [], token);

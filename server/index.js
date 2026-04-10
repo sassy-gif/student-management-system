@@ -17,12 +17,12 @@ const sessions = new Map(); // token -> userId
 
 const courses = [
 	{ id: "c1", code: "CS101", name: "Intro to CS" },
-	{ id: "c2", code: "MATH201", name: "Calculus I" },
-	{ id: "c3", code: "ENG110", name: "English Composition" }
+	{ id: "c2", code: "oop201", name: "Object-Oriented Programming" },
+	{ id: "c3", code: "algorithm01", name: "Algorithm Design" }
 ];
 
 const students = [
-	{ id: uuidv4(), name: "Alice Johnson", email: "alice@example.com" },
+	{ id: uuidv4(), name: "MohamedNur Kifle", email: "mamenur@example.com" },
 	{ id: uuidv4(), name: "Bob Smith", email: "bob@example.com" }
 ];
 
