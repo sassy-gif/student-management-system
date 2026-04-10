@@ -342,15 +342,71 @@ function CoursesPage() {
 }
 function DashboardPage() {
 	const { token } = useAuth();
-	const { data: students, loading: loadingStudents } = useFetch(`${API_BASE}/api/students`, [], token);
-	const { data: courses, loading: loadingCourses } = useFetch(`${API_BASE}/api/courses`, [], token);
 
-	if (loadingStudents || loadingCourses) return <Layout>Loading...</Layout>;
+	const { data: students, loading: loadingStudents } =
+		useFetch(`${API_BASE}/api/students`, [], token);
 
+	const { data: courses, loading: loadingCourses } =
+		useFetch(`${API_BASE}/api/courses`, [], token);
+
+	// ✅ NEW: enrollments added
+	const { data: enrollments, loading: loadingEnrollments } =
+		useFetch(`${API_BASE}/api/enrollments`, [], token);
+
+	// ✅ loading fix
+	if (loadingStudents || loadingCourses || loadingEnrollments)
+		return <Layout>Loading...</Layout>;
+
+	// stats
 	const totalStudents = students?.length || 0;
 	const totalCourses = courses?.length || 0;
+	const totalEnrollments = enrollments?.length || 0;
 
 	return (
 		<Layout>
 			<h2>Dashboard</h2>
-			<div className="dashboard-stats"> 
+
+			{/* STATS */}
+			<div className="dashboard-stats">
+				<div className="stat-card">
+					<h3>Total Students</h3>
+					<p>{totalStudents}</p>
+				</div>
+
+				<div className="stat-card">
+					<h3>Total Courses</h3>
+					<p>{totalCourses}</p>
+				</div>
+
+				{/* NEW CARD */}
+				<div className="stat-card">
+					<h3>Total Enrollments</h3>
+					<p>{totalEnrollments}</p>
+				</div>
+			</div>
+
+			{/* RECENT STUDENTS */}
+			<div className="dashboard-recent">
+				<h3>Recent Students</h3>
+
+				<ul className="list">
+					{students?.slice(0, 5).map((s) => (
+						<li key={s.id} className="list-item">
+							<span className="flex-grow">
+								<strong>{s.name}</strong> — {s.email}
+							</span>
+						</li>
+					))}
+				</ul>
+			</div>
+		</Layout>
+	);
+}
+export default function App() { const { user } = useAuth();
+ return ( <Routes> <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
+  <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+   <Route path="/" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
+    <Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
+	 <Route path="/students/:id" element={<ProtectedRoute><StudentDetailPage /></ProtectedRoute>} 
+	 /> <Route path="/students/:id/edit" element={<ProtectedRoute><EditStudentPage /></ProtectedRoute>} />
+	  </Routes> ); }
