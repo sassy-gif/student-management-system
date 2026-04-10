@@ -353,42 +353,4 @@ function DashboardPage() {
 	return (
 		<Layout>
 			<h2>Dashboard</h2>
-			<div className="dashboard-stats">
-				<div className="stat-card">
-					<h3>Total Students</h3>
-					<p>{totalStudents}</p>
-				</div>
-				<div className="stat-card">
-					<h3>Total Courses</h3>
-					<p>{totalCourses}</p>
-				</div>
-			</div>
-			<div className="dashboard-recent">
-				<h3>Recent Students</h3>
-				<ul className="list">
-					{students?.slice(0, 5).map((s) => (
-						<li key={s.id} className="list-item">
-							<span className="flex-grow">
-								<strong>{s.name}</strong> — {s.email}
-							</span>
-						</li>
-					))}
-				</ul>
-			</div>
-		</Layout>
-	);
-}
-
-export default function App() {
-	const { user } = useAuth();
-	return (
-		<Routes>
-			<Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
-			<Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-			<Route path="/" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
-			<Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
-			<Route path="/students/:id" element={<ProtectedRoute><StudentDetailPage /></ProtectedRoute>} />
-			<Route path="/students/:id/edit" element={<ProtectedRoute><EditStudentPage /></ProtectedRoute>} />
-		</Routes>
-	);
-}
+			<div className="dashboard-stats"> 
