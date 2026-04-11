@@ -47,17 +47,35 @@ function ProtectedRoute({ children }) {
 }
 
 function Layout({ children }) {
-	const { user, logout } = useAuth();
+	const { logout } = useAuth();
+	const [open, setOpen] = useState(true);
+
 	return (
-		<div className="container">
-			<nav className="navbar">
+		<div className="app">
+
+			{/* SIDEBAR */}
+			<div className={`sidebar ${open ? "open" : "closed"}`}>
+				<h2>{open ? "School" : "S"}</h2>
+
 				<Link to="/dashboard">Dashboard</Link>
 				<Link to="/">Students</Link>
 				<Link to="/courses">Courses</Link>
-				
-				{user && <button onClick={logout}>Logout</button>}
-			</nav>
-			{children}
+
+				<button onClick={logout}>Logout</button>
+			</div>
+
+			{/* MAIN AREA */}
+			<div className="main">
+
+				{/* TOP BAR */}
+				<div className="topbar">
+					<button onClick={() => setOpen(!open)}>☰</button>
+				</div>
+
+				<div className="content">
+					{children}
+				</div>
+			</div>
 		</div>
 	);
 }
