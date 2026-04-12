@@ -67,7 +67,7 @@ function Layout({ children }) {
 			{/* MAIN AREA */}
 			<div className="main">
 
-				{/* TOP BAR */}
+				{/* TOP BAR (just button for now) */}
 				<div className="topbar">
 					<button onClick={() => setOpen(!open)}>☰</button>
 				</div>
@@ -420,11 +420,16 @@ function DashboardPage() {
 		</Layout>
 	);
 }
-export default function App() { const { user } = useAuth();
- return ( <Routes> <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
-  <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-   <Route path="/" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
-    <Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
-	 <Route path="/students/:id" element={<ProtectedRoute><StudentDetailPage /></ProtectedRoute>} 
-	 /> <Route path="/students/:id/edit" element={<ProtectedRoute><EditStudentPage /></ProtectedRoute>} />
-	  </Routes> ); }
+export default function App() { 
+	const { user } = useAuth();
+	return ( 
+		<Routes> 
+			<Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
+			<Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+			<Route path="/" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
+			<Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
+			<Route path="/students/:id" element={<ProtectedRoute><StudentDetailPage /></ProtectedRoute>} />
+			<Route path="/students/:id/edit" element={<ProtectedRoute><EditStudentPage /></ProtectedRoute>} />
+		</Routes> 
+	); 
+}            
